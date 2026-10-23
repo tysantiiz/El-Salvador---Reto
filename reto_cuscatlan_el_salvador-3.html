@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>🇸🇻 Reto Cuscatlán — El Salvador</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,Segoe UI,sans-serif;background:radial-gradient(circle at 20% 10%,#42d3ff 0,#0077b6 35%,#023047 100%);color:#073b4c;min-height:100vh}
+.wrap{max-width:980px;margin:auto;padding:18px}.card{background:#fff;border:4px solid #f7c948;border-radius:28px;padding:24px;box-shadow:0 20px 60px #001d2e99;overflow:hidden}
+.screen{display:none}.screen.active{display:block}.hero{text-align:center}.flag{font-size:86px;filter:drop-shadow(0 5px 5px #0003)}h1{font-size:clamp(32px,7vw,62px);margin:0;color:#006494}.sub{font-size:18px;color:#567;margin:8px auto 22px;max-width:700px}
+button{border:0;border-radius:15px;padding:14px 20px;font-size:16px;font-weight:800;cursor:pointer;background:#0077b6;color:#fff;margin:6px;box-shadow:0 4px 0 #005b8a;transition:.12s}button:hover{transform:translateY(-2px);filter:brightness(1.08)}button:active{transform:translateY(2px);box-shadow:none}.secondary{background:#90e0ef;color:#073b4c;box-shadow:0 4px 0 #52b8cf}
+.tags{display:flex;justify-content:center;gap:8px;flex-wrap:wrap}.tag{background:#e8f8fc;padding:8px 12px;border-radius:999px;font-weight:700}
+.top{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}.stat{background:#eef8fb;border-radius:14px;padding:9px 13px;font-weight:800}.bar{height:13px;background:#e6eef2;border-radius:20px;overflow:hidden;margin:14px 0}.fill{height:100%;background:linear-gradient(90deg,#f7c948,#ff9f1c);width:0%;transition:.35s}
+.qbox{background:linear-gradient(135deg,#f2fbfd,#fff);border:2px solid #d9edf3;border-radius:20px;padding:20px;margin:18px 0}.category{font-size:13px;font-weight:900;color:#0077b6;text-transform:uppercase;letter-spacing:1px}.question{font-size:clamp(21px,4vw,30px);font-weight:900;margin-top:8px}
+.answers{display:grid;grid-template-columns:1fr 1fr;gap:10px}.answer{width:100%;text-align:left;margin:0;background:#f5fafc;color:#073b4c;border:2px solid #d6e7ed;box-shadow:none}.answer.correct{background:#bdf2ca;border-color:#2a9d55}.answer.wrong{background:#ffcaca;border-color:#d33}.answer:disabled{cursor:default}
+.feedback{min-height:28px;text-align:center;font-weight:900;font-size:18px;margin:12px}.fact{background:#fff8db;border-left:5px solid #f7c948;padding:12px;border-radius:10px;margin-top:10px;color:#594700}.next{text-align:center}
+.result{text-align:center}.scorebig{font-size:72px;font-weight:1000;color:#0077b6}.meter{height:18px;background:#e9eef1;border-radius:20px;overflow:hidden;max-width:500px;margin:15px auto}.meter span{display:block;height:100%;background:#f7c948}.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:18px 0}.mini{padding:15px;background:#f4fafc;border-radius:16px}.mini b{font-size:25px;display:block}
+@media(max-width:650px){.answers{grid-template-columns:1fr}.cards{grid-template-columns:1fr}.card{padding:17px}}
+</style>
+</head>
+<body>
+<div class="wrap"><div class="card">
+
+<section id="home" class="screen active hero">
+  <div class="flag">🇸🇻</div>
+  <h1>Reto Cuscatlán</h1>
+  <p class="sub">Un quiz-aventura sobre <b>El Salvador</b>. Poné a prueba tus conocimientos sobre geografía, historia, cultura, gastronomía, símbolos y lugares del país.</p>
+  <div class="tags"><span class="tag">🌋 Volcanes</span><span class="tag">🌊 Playas</span><span class="tag">🫓 Pupusas</span><span class="tag">🏛️ Historia</span><span class="tag">🎵 Cultura</span></div>
+  <br><button onclick="startGame()">🚀 COMENZAR AVENTURA</button>
+  <button class="secondary" onclick="show('about')">📖 ¿Cómo jugar?</button>
+</section>
+
+<section id="about" class="screen">
+  <h2>📖 ¿Cómo jugar?</h2>
+  <p>Respondé preguntas y acumulá puntos. Hay preguntas fáciles, medias y difíciles.</p>
+  <div class="cards">
+    <div class="mini"><b>⭐</b>Puntos por respuestas correctas.</div>
+    <div class="mini"><b>🔥</b>Racha por acertar varias seguidas.</div>
+    <div class="mini"><b>🏆</b>Al final recibís un rango.</div>
+  </div>
+  <button onclick="show('home')">← Volver</button>
+</section>
+
+<section id="game" class="screen">
+  <div class="top">
+    <div class="stat" id="counter">Pregunta</div>
+    <div class="stat">⭐ <span id="score">0</span></div>
+    <div class="stat">🔥 Racha <span id="streak">0</span></div>
+  </div>
+  <div class="bar"><div class="fill" id="fill"></div></div>
+  <div class="qbox">
+    <div class="category" id="category"></div>
+    <div class="question" id="question"></div>
+  </div>
+  <div class="answers" id="answers"></div>
+  <div class="feedback" id="feedback"></div>
+  <div id="fact"></div>
+  <div class="next"><button id="next" onclick="nextQuestion()" style="display:none">Siguiente →</button></div>
+</section>
+
+<section id="end" class="screen result">
+  <div class="flag">🇸🇻</div>
+  <h1>¡Aventura completada!</h1>
+  <div class="scorebig" id="finalScore"></div>
+  <div class="meter"><span id="meter"></span></div>
+  <h2 id="rank"></h2>
+  <p id="resultText"></p>
+  <div class="cards">
+    <div class="mini"><b id="correctCount">0</b>Correctas</div>
+    <div class="mini"><b id="bestStreak">0</b>Mejor racha</div>
+    <div class="mini"><b id="percentage">0%</b>Precisión</div>
+  </div>
+  <button onclick="startGame()">🔄 Jugar de nuevo</button>
+  <button class="secondary" onclick="show('home')">🏠 Inicio</button>
+</section>
+
+</div></div>
+
+<script>
+const questions=[
+{cat:"🇸🇻 Datos básicos",q:"¿Cuál es la capital de El Salvador?",a:["San Salvador","Santa Ana","San Miguel","La Libertad"],c:0,f:"San Salvador es la capital y el principal centro político, económico y cultural del país."},
+{cat:"💵 Economía",q:"¿Cuál es la moneda oficial utilizada actualmente en El Salvador?",a:["Peso salvadoreño","Dólar estadounidense","Quetzal","Lempira"],c:1,f:"El dólar estadounidense se convirtió en moneda de curso legal en 2001. Antes se utilizaba el colón salvadoreño."},
+{cat:"🪙 Historia monetaria",q:"¿Cómo se llamaba la moneda que utilizaba El Salvador antes del dólar?",a:["Colón salvadoreño","Peso salvadoreño","Sol salvadoreño","Real salvadoreño"],c:0,f:"El colón salvadoreño fue la moneda nacional antes de la dolarización."},
+{cat:"🌊 Geografía",q:"¿Qué océano baña la costa de El Salvador?",a:["Atlántico","Índico","Pacífico","Ártico"],c:2,f:"El Salvador tiene costa sobre el océano Pacífico, con numerosas playas y zonas de surf."},
+{cat:"🫓 Gastronomía",q:"¿Cuál es uno de los alimentos más representativos de El Salvador?",a:["Pupusa","Taco al pastor","Feijoada","Ceviche peruano"],c:0,f:"Las pupusas son uno de los símbolos gastronómicos más conocidos de El Salvador."},
+{cat:"🌋 Naturaleza",q:"¿Cuál de estos volcanes se encuentra en El Salvador?",a:["Volcán de Santa Ana","Aconcagua","Cotopaxi","Chimborazo"],c:0,f:"El volcán de Santa Ana, también llamado Ilamatepec, es el volcán más alto de El Salvador."},
+{cat:"🏞️ Lugares",q:"¿Cuál es famoso por ser un lago de origen volcánico?",a:["Lago de Coatepeque","Lago Titicaca","Lago Nahuel Huapi","Lago Maracaibo"],c:0,f:"El lago de Coatepeque ocupa una gran caldera volcánica y es uno de los paisajes más conocidos del país."},
+{cat:"🏖️ Turismo",q:"¿Qué actividad es especialmente famosa en varias playas salvadoreñas?",a:["Surf","Esquí sobre nieve","Trineo","Buceo bajo hielo"],c:0,f:"El litoral salvadoreño es reconocido internacionalmente por sus olas y sus lugares para practicar surf."},
+{cat:"🏛️ Historia",q:"¿Cómo se llamaba el territorio indígena relacionado históricamente con gran parte del actual El Salvador?",a:["Cuscatlán","Tawantinsuyu","Muisca","Anáhuac"],c:0,f:"Cuscatlán es un nombre histórico asociado al territorio de los pueblos pipiles en la región."},
+{cat:"🎨 Símbolos",q:"¿Cuántos colores principales tiene la bandera de El Salvador?",a:["2","3","4","5"],c:0,f:"La bandera salvadoreña utiliza principalmente azul y blanco, inspirados en la bandera de las Provincias Unidas de Centroamérica."},
+{cat:"🏙️ Ciudades",q:"¿Cuál es una de las principales ciudades del occidente de El Salvador?",a:["Santa Ana","Belmopán","Cochabamba","Cartago"],c:0,f:"Santa Ana es una de las ciudades más importantes del país y destaca por su patrimonio arquitectónico."},
+{cat:"🌽 Cultura",q:"¿Cuál de estas bebidas tradicionales está presente en la gastronomía salvadoreña?",a:["Horchata de morro","Tereré exclusivamente","Chai masala","Bubble tea"],c:0,f:"La horchata de morro es una bebida tradicional preparada con semillas de morro y otros ingredientes."},
+{cat:"🗺️ Geografía",q:"¿Con cuáles de estos países limita El Salvador por tierra?",a:["Guatemala y Honduras","México y Belice","Nicaragua y Costa Rica","Panamá y Colombia"],c:0,f:"El Salvador limita por tierra con Guatemala y Honduras. Hacia el sureste, el golfo de Fonseca lo conecta con Nicaragua."},
+{cat:"📚 Historia",q:"¿En qué año El Salvador declaró su independencia de España junto con otras provincias de Centroamérica?",a:["1492","1811","1821","1901"],c:2,f:"La independencia de Centroamérica fue declarada el 15 de septiembre de 1821."},
+{cat:"🏅 Desafío",q:"¿Cuál es el punto más alto de El Salvador?",a:["Cerro El Pital","Volcán de Santa Ana","Volcán de San Miguel","Cerro Verde"],c:1,f:"El volcán de Santa Ana, con aproximadamente 2.381 metros, es el punto más alto del país."}
+];
+
+let order=[],i=0,score=0,streak=0,best=0,answered=false;
+function show(id){document.querySelectorAll('.screen').forEach(x=>x.classList.remove('active'));document.getElementById(id).classList.add('active')}
+function startGame(){order=[...questions].sort(()=>Math.random()-.5);i=0;score=0;streak=0;best=0;show('game');render()}
+function render(){
+ answered=false;let x=order[i];
+ document.getElementById('counter').textContent=`Pregunta ${i+1} / ${order.length}`;
+ document.getElementById('score').textContent=score;document.getElementById('streak').textContent=streak;
+ document.getElementById('fill').style.width=(i/order.length*100)+'%';
+ document.getElementById('category').textContent=x.cat;document.getElementById('question').textContent=x.q;
+ document.getElementById('feedback').textContent='';document.getElementById('fact').innerHTML='';
+ let next=document.getElementById('next');next.style.display='none';
+ let box=document.getElementById('answers');box.innerHTML='';
+ x.a.forEach((a,n)=>{let b=document.createElement('button');b.className='answer';b.textContent=a;b.onclick=()=>answer(n,b);box.appendChild(b)});
+}
+function answer(n,btn){
+ if(answered)return;answered=true;let x=order[i];
+ document.querySelectorAll('.answer').forEach((b,k)=>{b.disabled=true;if(k===x.c)b.classList.add('correct')});
+ if(n===x.c){streak++;best=Math.max(best,streak);score+=100+(streak-1)*25;btn.classList.add('correct');document.getElementById('feedback').textContent=`✅ ¡Correcto! +${100+(streak-1)*25} puntos`}
+ else{streak=0;btn.classList.add('wrong');document.getElementById('feedback').textContent='❌ Incorrecto';}
+ document.getElementById('score').textContent=score;document.getElementById('streak').textContent=streak;
+ document.getElementById('fact').innerHTML=`<div class="fact">💡 <b>Dato:</b> ${x.f}</div>`;
+ let next=document.getElementById('next');next.style.display='inline-block';next.textContent=i===order.length-1?'🏆 Ver resultado':'Siguiente →';
+}
+function nextQuestion(){if(i<order.length-1){i++;render()}else endGame()}
+function endGame(){
+ show('end');let max=order.length*100+(order.length*(order.length-1)/2*25);let pct=Math.round(score/max*100);
+ document.getElementById('finalScore').textContent=score+' puntos';document.getElementById('meter').style.width=Math.min(pct,100)+'%';
+ let rank=pct>=90?'🔥 Leyenda de Cuscatlán':pct>=75?'🌋 Explorador experto':pct>=55?'😎 Conocedor de El Salvador':'📚 Aprendiz salvadoreño';
+ document.getElementById('rank').textContent=rank;document.getElementById('resultText').textContent=`Completaste ${order.length} desafíos. ¡Cada partida mezcla las preguntas para que puedas volver a jugar!`;
+ document.getElementById('correctCount').textContent=Math.round(score/100);document.getElementById('bestStreak').textContent=best;document.getElementById('percentage').textContent=pct+'%';
+}
+</script>
+</body>
+</html>
